@@ -1,0 +1,254 @@
+  <!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Energia SA — obniż swoje rachunki za prąd</title>
+  <meta name="description" content="Prześlij fakturę za prąd, a my przeanalizujemy Twój profil zużycia i pokażemy, ile Twoja firma może oszczędzić. Obniż rachunki za energię z pomocą agenta energetycznego." />
+  <meta name="color-scheme" content="light dark">
+  <style>
+    :root{
+      --bg: #0b1220;
+      --bg-elev: #0f1730;
+      --text: #e8ecf6;
+      --muted: #b8c2d9;
+      --accent: #4be89a;
+      --accent-2: #5fb3ff;
+      --danger: #ff6b6b;
+      --card: rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.12);
+      --focus: #ffe38a;
+      --shadow: 0 6px 16px rgba(0,0,0,0.25);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --maxw: 640px;
+    }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height:1.5;
+    }
+    .container{max-width: var(--maxw); margin-inline:auto; padding:16px}
+    h1{font-size:1.6rem; margin:0 0 12px}
+    h2{font-size:1.3rem; margin:20px 0 10px}
+    p{margin:0 0 12px}
+    .card{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:16px; box-shadow: var(--shadow)}
+    label{display:block; font-weight:600; margin-bottom:6px}
+    input, .dropzone{
+      width:100%; padding:12px; border-radius: var(--radius-sm);
+      background: var(--bg-elev); border:1px solid var(--border); color: var(--text);
+      font-size:1rem; outline:none;
+    }
+    input:focus, .dropzone:focus{border-color:var(--focus); box-shadow:0 0 0 3px rgba(255,227,138,.35)}
+    .btn{display:inline-block; padding:12px 18px; border-radius: var(--radius-sm); background: linear-gradient(135deg,var(--accent),#68f0b1); color:#052012; font-weight:700; border:none; cursor:pointer; width:100%; text-align:center}
+    .btn.secondary{background:transparent; border:1px solid var(--border); color:var(--text)}
+    .hint{color:var(--muted); font-size:.9rem}
+    .error{color:var(--danger); font-weight:600}
+    .success{color:#19c37d; font-weight:700}
+    .dropzone{
+      display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:150px;
+      border-style:dashed; border-radius:var(--radius); cursor:pointer; text-align:center;
+      gap:8px; position:relative; overflow:hidden
+    }
+    .dropzone.dragover{border-color:var(--accent); background:rgba(75,232,154,.08)}
+    .dropzone img{max-width:100%; max-height:140px; object-fit:contain}
+    .badge{font-size:.85rem; color:var(--muted)}
+    .progress{height:6px; background:#1d2a44; border-radius:99px; overflow:hidden; border:1px solid var(--border); margin-top:10px}
+    .progress>span{display:block; height:100%; width:0; background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+    .logo{max-width:220px; display:block; margin:0 auto 16px}
+    footer{margin-top:30px; padding:20px; font-size:.9rem; color:var(--muted); text-align:center}
+    .consent{margin:16px 0; text-align:left; font-size:.85rem; color:var(--muted)}
+  </style>
+</head>
+<body>
+  <header class="container">
+    <img src="energia-sa-logo-1.png" alt="Energia SA" class="logo" />
+    <div class="card">
+      <span class="tag">Świadomość energetyczna • Oszczędności dla firm</span>
+      <h1>Obniż rachunki za prąd z Energia SA</h1>
+      <p class="lede">Prześlij rachunek, a my <strong>bezpłatnie</strong> przeanalizujemy profil zużycia Twojej firmy i zaproponujemy <strong>tańszą ofertę</strong> sprzedaży energii.</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="card">
+      <form id="leadForm" name="leadForm" method="POST" data-netlify="true" data-netlify-honeypot="website" enctype="multipart/form-data" aria-describedby="formStatus">
+        <input type="hidden" name="form-name" value="leadForm" />
+        <h2 id="formularz">Analiza Twojej faktury</h2>
+        <p class="hint">Dodaj zdjęcie/plik faktury (JPG/PNG/PDF, do 50&nbsp;MB). Plik zostanie zapisany w bezpiecznym magazynie i będzie dostępny pod unikalnym linkiem (czasowo).</p>
+
+        <label for="firstName">Imię</label>
+        <input id="firstName" name="firstName" required />
+        <label for="lastName">Nazwisko</label>
+        <input id="lastName" name="lastName" required />
+        <label for="company">Nazwa firmy</label>
+        <input id="company" name="company" required />
+        <label for="phone">Numer telefonu</label>
+        <input id="phone" name="phone" inputmode="tel" placeholder="+48 600 000 000" pattern="^(\+?48)?\s?\d{3}[\s-]?\d{3}[\s-]?\d{3}$" required />
+        <div class="hint">Format: 600&nbsp;000&nbsp;000 lub +48&nbsp;600&nbsp;000&nbsp;000</div>
+
+        <div>
+          <label for="billUpload">Faktura za prąd</label>
+          <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Upuść, wklej lub wybierz plik faktury">
+            <strong>Kliknij, aby dodać fakturę</strong>
+            <span class="badge">lub zrób zdjęcie telefonem</span>
+            <input id="billUpload" name="bill" type="file" accept="image/*,application/pdf" capture="environment" hidden />
+          </div>
+        </div>
+
+        <div class="consent">
+          <label>
+            <input type="checkbox" name="rodo" required />
+            Wyrażam zgodę na przetwarzanie moich danych osobowych zgodnie z <a href="#rodo" style="color:var(--accent)">RODO</a> w celu analizy faktury i kontaktu handlowego.
+          </label>
+        </div>
+
+        <button type="submit" class="btn">Wyślij do analizy</button>
+        <button type="button" class="btn secondary" id="clearFile">Wyczyść plik</button>
+        <div id="formStatus" class="hint" aria-live="polite"></div>
+      </form>
+    </div>
+
+    <div id="rodo" class="card" style="margin-top:20px">
+      <h2>Informacja o RODO</h2>
+      <p>Zgodnie z Rozporządzeniem Parlamentu Europejskiego i Rady (UE) 2016/679 (RODO) informujemy, że administratorem danych osobowych jest Adrian Skotniczny. Dane są przetwarzane wyłącznie w celu analizy faktury oraz przedstawienia oferty sprzedaży energii elektrycznej. Podanie danych jest dobrowolne, ale niezbędne do realizacji tego celu.</p>
+      <p>Masz prawo dostępu do swoich danych, ich sprostowania, usunięcia lub ograniczenia przetwarzania. Masz również prawo do wniesienia sprzeciwu wobec przetwarzania oraz prawo do przenoszenia danych. W przypadku naruszenia przepisów RODO przysługuje Ci prawo wniesienia skargi do Prezesa Urzędu Ochrony Danych Osobowych.</p>
+      <p>Kontakt w sprawie danych: <a href="mailto:adrian.skotniczny@energiasa.pl">adrian.skotniczny@energiasa.pl</a></p>
+    </div>
+  </main>
+
+  <footer>
+    <p><strong>Agent Energetyczny:</strong> Adrian Skotniczny</p>
+    <p><strong>E-mail:</strong> adrian.skotniczny@energiasa.pl | <strong>Tel:</strong> 692727554</p>
+    
+    <p class="hint">Energia SA © 2025 — Wszystkie prawa zastrzeżone</p>
+  </footer>
+
+  <script>
+  const $ = (sel, root=document) => root.querySelector(sel);
+  const form = $('#leadForm');
+  const dz = $('#dropzone');
+  const statusEl = $('#formStatus');
+  const API = 'https://energia-sa.onrender.com/api/leads'; // <<— Twój backend API
+
+  const MAX_SIZE = 50 * 1024 * 1024; // 50MB
+  const ACCEPTED = ['image/jpeg','image/png','application/pdf','image/jpg'];
+  let selectedFile = null;
+
+  // ===== Dropzone interakcje =====
+  dz.addEventListener('click', () => dz.querySelector('#billUpload').click());
+  dz.addEventListener('dragover', (e)=>{ e.preventDefault(); dz.classList.add('dragover'); });
+  dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+  dz.addEventListener('drop', (e)=>{
+    e.preventDefault(); dz.classList.remove('dragover');
+    const f = e.dataTransfer.files?.[0]; if(f) handleFile(f);
+  });
+
+  document.addEventListener('paste', (e)=>{
+    const items = e.clipboardData?.items || [];
+    for(const it of items){ if(it.kind==='file'){ const f=it.getAsFile(); if(f){ handleFile(f); break; } } }
+  });
+
+  dz.addEventListener('change', (e)=>{
+    if(e.target && e.target.id === 'billUpload'){
+      const f = e.target.files[0]; if(f) handleFile(f);
+    }
+  });
+
+  $('#clearFile').addEventListener('click', ()=>{
+    selectedFile = null;
+    const input = dz.querySelector('#billUpload');
+    if(input) input.value = '';
+    resetDropzone();
+    statusEl.textContent = 'Usunięto plik.';
+  });
+
+  function handleFile(file){
+    if(!ACCEPTED.includes(file.type)) return showError('Nieobsługiwany typ pliku.');
+    if(file.size > MAX_SIZE) return showError('Plik jest zbyt duży. Maks. 50 MB.');
+    selectedFile = file; renderPreview(file);
+    statusEl.textContent = 'Plik dodany. Wypełnij dane i wyślij formularz.';
+  }
+
+  function renderPreview(file){
+    // Zostawiamy istniejący input i podmieniamy tylko treść dropzone
+    const existingInput = dz.querySelector('#billUpload');
+    dz.innerHTML = '';
+
+    if(file.type.startsWith('image/')){
+      const img = document.createElement('img');
+      img.alt='Podgląd faktury';
+      img.src = URL.createObjectURL(file);
+      dz.appendChild(img);
+    } else {
+      const box=document.createElement('div');
+      box.style.width='80px'; box.style.height='80px'; box.style.display='grid'; box.style.placeItems='center';
+      box.style.border='1px solid var(--border)'; box.style.borderRadius='8px';
+      box.textContent='PDF';
+      dz.appendChild(box);
+    }
+
+    const meta = document.createElement('div');
+    meta.className = 'badge';
+    meta.textContent = `${file.name} • ${(file.size/1024/1024).toFixed(2)} MB`;
+    dz.appendChild(meta);
+
+    if(existingInput) dz.appendChild(existingInput);
+  }
+
+  function resetDropzone(){
+    const existingInput = dz.querySelector('#billUpload');
+    dz.innerHTML = '<strong>Upuść plik tutaj</strong><span class="badge">albo kliknij, aby wybrać • możesz też wkleić (Ctrl/Cmd+V)</span>';
+    if(existingInput) dz.appendChild(existingInput);
+  }
+
+  function showError(msg){ statusEl.innerHTML = '<span class="error">❌ ' + msg + '</span>'; }
+  function showSuccess(msg){ statusEl.innerHTML = '<span class="success">✅ ' + msg + '</span>'; }
+
+  // ===== Wysyłka formularza do API =====
+  form.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+
+    try {
+      // walidacja podstawowa (HTML5 już wymaga required i pattern)
+      const data = new FormData(form);
+      // honeypot (jeśli masz ukryte pole website w markup Netlify; tu może być puste)
+      if(data.get('website')) return; 
+
+      // załącz plik
+      if(selectedFile) {
+        data.set('bill', selectedFile);
+      } else {
+        const f = dz.querySelector('#billUpload')?.files?.[0];
+        if(!f) { showError('Dodaj plik faktury (JPG/PNG/PDF).'); return; }
+        if(f.size > MAX_SIZE) { showError('Plik jest zbyt duży. Maks. 50 MB.'); return; }
+        data.set('bill', f);
+      }
+
+      // status/progress (prosty komunikat)
+      showSuccess('Wysyłanie…');
+
+      const res = await fetch(API, { method: 'POST', body: data });
+      if(!res.ok) throw new Error('Upload failed');
+
+      const out = await res.json().catch(()=> ({}));
+      if(out && out.signedUrl){
+        showSuccess('Zapisano! <a href="'+ out.signedUrl +'" target="_blank" rel="noopener">Otwórz plik</a> (link ważny 7 dni).');
+      } else if (out && out.url){
+        showSuccess('Zapisano! <a href="'+ out.url +'" target="_blank" rel="noopener">Otwórz plik</a>.');
+      } else {
+        showSuccess('Zapisano w magazynie. Dziękujemy!');
+      }
+      form.reset();
+      selectedFile = null;
+      resetDropzone();
+    } catch (err) {
+      console.error(err);
+      showError('Coś poszło nie tak. Spróbuj ponownie.');
+    }
+  });
+</script>
+</body>
+</html>
